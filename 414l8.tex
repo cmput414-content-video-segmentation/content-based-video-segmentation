@@ -1,0 +1,156 @@
+% !TEX TS-program = pdflatex
+% !TEX encoding = UTF-8 Unicode
+
+% This is a simple template for a LaTeX document using the "article" class.
+% See "book", "report", "letter" for other types of document.
+
+
+\documentclass[11pt]{article} % use larger type; default would be 10pt
+
+\usepackage[utf8]{inputenc} % set input encoding (not needed with XeLaTeX)
+
+%%% Examples of Article customizations
+% These packages are optional, depending whether you want the features they provide.
+% See the LaTeX Companion or other references for full information.
+
+
+%%% PAGE DIMENSIONS
+\usepackage{geometry} % to change the page dimensions
+\geometry{a4paper} % or letterpaper (US) or a5paper or....
+% \geometry{margin=2in} % for example, change the margins to 2 inches all round
+% \geometry{landscape} % set up the page for landscape
+%   read geometry.pdf for detailed page layout information
+
+\usepackage{graphicx} % support the \includegraphics command and options
+
+% \usepackage[parfill]{parskip} % Activate to begin paragraphs with an empty line rather than an indent
+
+%%% PACKAGES
+\usepackage{caption}
+\usepackage{booktabs} % for much better looking tables
+\usepackage{array} % for better arrays (eg matrices) in maths
+\usepackage{paralist} % very flexible & customisable lists (eg. enumerate/itemize, etc.)
+\usepackage{verbatim} % adds environment for commenting out blocks of text & for better verbatim
+% make it possible to include more than one captioned figure/table in a single float
+\usepackage{subfigure}
+
+
+
+
+% These packages are all incorporated in the memoir class to one degree or another...
+
+%%% HEADERS & FOOTERS
+\usepackage{fancyhdr} % This should be set AFTER setting up the page geometry
+\pagestyle{fancy} % options: empty , plain , fancy
+\renewcommand{\headrulewidth}{0pt} % customise the layout...
+\lhead{}\chead{}\rhead{}
+\lfoot{}\cfoot{\thepage}\rfoot{}
+
+%%% SECTION TITLE APPEARANCE
+\usepackage{sectsty}
+\allsectionsfont{\sffamily\mdseries\upshape} % (See the fntguide.pdf for font help)
+% (This matches ConTeXt defaults)
+
+%%% ToC (table of contents) APPEARANCE
+\usepackage[nottoc,notlof,notlot]{tocbibind} % Put the bibliography in the ToC
+\usepackage[titles,subfigure]{tocloft} % Alter the style of the Table of Contents
+\renewcommand{\cftsecfont}{\rmfamily\mdseries\upshape}
+\renewcommand{\cftsecpagefont}{\rmfamily\mdseries\upshape} % No bold!
+
+%%% END Article customizations
+
+%%% The "real" document content comes below...
+
+\title{Cmput414 Lab8}
+\author{Qingyang Zhang, Bowei Wang}
+
+%\date{} % Activate to display a given date or no date (if empty),
+         % otherwise the current date is printed 
+
+
+\begin{document}
+\maketitle
+
+\section{Tasks:}
+
+
+
+
+
+
+\subsection{Find an approparite video as the input(finished)}
+A free personal use video is downloaded from:\\ https://videos.pexels.com/videos/beach-aerial-footage-taken-by-a-drone-854218.
+\subsection{Implement the original content-based video segmentation method(processing)}
+
+\begin{figure}
+  \centering
+  \includegraphics[width=1\textwidth]{Figure_1.png} %1.png是图片文件的相对路径
+  \caption{Plot of the difference and values of the frames} %caption是图片的标题
+  \label{plot} %此处的label相当于一个图片的专属标志，目的是方便上下文的引用
+\end{figure}
+
+\begin{figure}
+  \centering
+  \includegraphics[width=1\textwidth]{Figure_2.png} %1.png是图片文件的相对路径
+  \caption{Plot of the difference and values of the frames on grayscale} %caption是图片的标题
+  \label{plot_gray} %此处的label相当于一个图片的专属标志，目的是方便上下文的引用
+\end{figure}
+
+
+    \begin{figure}
+    \centering
+    \subfigure[frame 279 and 280]{
+    \begin{minipage}[b]{0.45\textwidth}
+    \centering
+    \includegraphics[width=0.8\textwidth]{frame279.jpg} \\
+    \includegraphics[width=0.8\textwidth]{frame280.jpg}
+\end{minipage}
+}
+\subfigure[frame 671 and 672]{
+    \begin{minipage}[b]{0.45\textwidth}
+    \centering
+    \includegraphics[width=0.8\textwidth]{frame671.jpg}\\
+    \includegraphics[width=0.8\textwidth]{frame672.jpg}
+    \end{minipage}
+}
+    \subfigure[frame 759 and 760]{
+    \begin{minipage}[b]{0.45\textwidth}
+    \centering
+    \includegraphics[width=0.8\textwidth]{frame759.jpg}\\
+    \includegraphics[width=0.8\textwidth]{frame760.jpg}
+    \end{minipage}
+}
+    \subfigure[frame 1160 and 1161]{
+    \begin{minipage}[b]{0.45\textwidth}
+    \centering
+    \includegraphics[width=0.8\textwidth]{frame1160.jpg}\\
+    \includegraphics[width=0.8\textwidth]{frame1161.jpg}
+    \end{minipage}
+}
+
+    \caption{frames comparison}
+    \label{picture}
+    \end{figure}
+1.Accessing the video by frames.Then transfer the frame into matrixes.(finished)\\\\
+2.Progressing the algorithm to compare the matrixes. As Figure.\ref{picture} shows, the frame number 280, 672, 760 and 1161 are the sharply changed frames. That representating the contetnt change. This can also be detected from the plot Figure.\ref{plot}.Our next step is to divide the video based on the information
+collected from the plot.\\We also made some similar processes on grayscale image, the plot is looks like this Figure.\ref {plot_gray}. This one is very similar to the original one. Therefore we decide not using this factor as a feature of difference detect.\\\\
+3.Histgram comparison: Since only comparing the rgb difference and sum values are not reliable enough to detect content different. We are planning to add more features to detect the difference. One possible access is to transfer the image into Histgram and compare the Histgram.\\\\
+4.Detect different content: Currrently we planning to use the corner point method to detect the different content. The corner point shall represent the change of the content.\\\\
+5.Output different contents. \\
+(There are many different methods for output, it can be segment of videos or single frames)\\\\
+6.github page for work tracking.
+\footnote{https://github.com/cmput414-content-video-segmentation/content-based-video-segmentation}
+\subsection{Controller(processing)}
+Currently we will implement some simple terminal controller to send command to the program.
+
+
+\section{Optional Tasks:}
+\subsection{Pretratment or videos}
+1.If the video is too large, compress the video into smaller format .\\
+2.Calling an api to cut the video into single frames. It will be easier for program to access the video.
+
+\subsection{User interface}
+User interface is optional, but can make the program looks better.
+
+
+\end{document}
