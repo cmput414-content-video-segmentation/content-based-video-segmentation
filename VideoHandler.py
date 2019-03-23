@@ -24,6 +24,7 @@ class ToFrames():
         #     count += 1
         # print("%d frames are generated" % count)
     def GetCurrent(self):
+
         return self.image
 
     def GetNext(self):

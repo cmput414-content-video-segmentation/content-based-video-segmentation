@@ -6,55 +6,61 @@ import matplotlib.pyplot as plt
 import math
 import cv2
 CV_COMP_CORREL = 0
-colors = ('b','g','r')
+COLORS = ('b','g','r')
 Threshold = 35
+
+def traditional_method(image, hist_mean, hist_previous):
+    summean = 0
+    sumprev = 0
+    currenthist = []
+
+    for i, col in enumerate(COLORS):
+        histr = cv2.calcHist([image], [i], None, [256], [0, 256])
+        summean = summean + abs(hist_mean[i] - histr)
+        sumprev = sumprev + abs(hist_previous[i] - histr)
+        currenthist.append(histr)
+
+    return summean, sumprev, currenthist
+
+def Otsu(image):
+    img_gray = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
+    ret, thr = cv2.threshold(img_gray, 0, 255, cv2.THRESH_OTSU)
+    return ret, thr
+
+
 def videoSegment(filename):
     frames = ToFrames(filename)
     prev = frames.GetCurrent()
     image = frames.GetNext()
     sub = []
     total = []
-    gray_sub = []
-    gray_total = []
-    histgrams = []
-    # histb = []
-    g_prev = cv2.cvtColor(prev, cv2.COLOR_BGR2GRAY)
-    g_image = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
-
-    # tempout = temp
-    # cv2.equalizeHist(temp,tempout)
-    # histgrams.append(tempout)
-    # histb.append( cv2.calcHist([image], [0], None, [256], [0, 256]))
-
-    # print(len(image.ravel()))
-    # # plt.hist(image.ravel(), 256, [0, 256])
-    # histg = cv2.calcHist([image], [0], None, [256], [0, 256])
-    # print(len(histg[0]))
-    # plt.plot(histg)
-    #
-    # plt.xlim([0, 256])
-    # # cv2.compareHist(prev,image,method=CV_COMP_CORREL)
-    # plt.show()
+    hist_mean = []
+    hist_previous = []
+    threasholds = []
+    Otsudifference = []
+    threas, Otsuprev = Otsu(prev)
+    threasholds.append(threas)
+    # initialize hist_previous and hist_mean
+    for i, col in enumerate(COLORS):
+        histr = cv2.calcHist([prev], [i], None, [256], [0, 256])
+        hist_mean.append(histr)
+        hist_previous.append(histr)
 
 
     while(type(image) == np.ndarray):
-        g_image = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
-
         total.append(int(image.sum()))
-        gray_total.append(int(g_image.sum()))
         dif = np.absolute(prev - image)
         sub.append(int(dif.sum()))
-        gdif = np.absolute(g_prev - g_image)
-        gray_sub.append(int(gdif.sum()))
         prev = image
-        g_prev = g_image
+        # summean, sumprev, currenthist = traditional_method(image, hist_mean, hist_previous)
+        # hist_previous = currenthist
+        threas, Otsucurrent = Otsu(image)
+        threasholds.append(threas)
+        dif = np.absolute(Otsucurrent - Otsuprev)
+        Otsudifference.append(int(dif.sum()))
+        Otsuprev = Otsucurrent
         image = frames.GetNext()
 
-        # grayscale.append(temp)
-        # tempout = temp
-        # cv2.equalizeHist(temp, tempout)
-        # histgrams.append(tempout)
-        # histb.append(cv2.calcHist([image], [0], None, [256], [0, 256]))
 
     # sublen = len(sub)
     # numframes = 1
@@ -108,6 +114,8 @@ def videoSegment(filename):
 # plt.legend(('cdf', 'histogram'), loc='upper left')
 # 16
 # plt.show()
+
+
     print(predifference)
     plt.figure(1)
     plt.subplot(211)
@@ -118,22 +126,43 @@ def videoSegment(filename):
     plt.plot(total)
     plt.ylabel('values')
     plt.xlabel('frames')
-    plt.show()
 
     plt.figure(2)
     plt.subplot(211)
-    plt.plot(gray_sub)
+    plt.plot(Otsudifference)
     plt.ylabel('gray difference')
     plt.xlabel('frames')
     plt.subplot(212)
-    plt.plot(gray_total)
+    plt.plot(threasholds)
+    plt.ylabel('gray values')
+    plt.xlabel('frames')
+
+
+    dx = 1
+    dy = np.diff(total)/dx
+    dsub = np.diff(sub)/dx
+    plt.figure(3)
+    plt.subplot(211)
+    plt.plot(dsub)
+    plt.ylabel('gray difference')
+    plt.xlabel('frames')
+    plt.subplot(212)
+    plt.plot(dy)
+    plt.ylabel('gray values')
+    plt.xlabel('frames')
+
+    dy = np.diff(threasholds)/dx
+    dsub = np.diff(Otsudifference)/dx
+    plt.figure(4)
+    plt.subplot(211)
+    plt.plot(dsub)
+    plt.ylabel('gray difference')
+    plt.xlabel('frames')
+    plt.subplot(212)
+    plt.plot(dy)
     plt.ylabel('gray values')
     plt.xlabel('frames')
     plt.show()
-
-
-
-
 
 if __name__=="__main__":
     videoSegment('Beach Aerial Footage Taken by a Drone.mp4')
