@@ -130,11 +130,11 @@ def videoSegment(filename):
     plt.figure(2)
     plt.subplot(211)
     plt.plot(Otsudifference)
-    plt.ylabel('gray difference')
+    plt.ylabel('Otsu difference')
     plt.xlabel('frames')
     plt.subplot(212)
     plt.plot(threasholds)
-    plt.ylabel('gray values')
+    plt.ylabel('Otsu values')
     plt.xlabel('frames')
 
 
@@ -144,11 +144,11 @@ def videoSegment(filename):
     plt.figure(3)
     plt.subplot(211)
     plt.plot(dsub)
-    plt.ylabel('gray difference')
+    plt.ylabel('differences derivative')
     plt.xlabel('frames')
     plt.subplot(212)
     plt.plot(dy)
-    plt.ylabel('gray values')
+    plt.ylabel('values derivative')
     plt.xlabel('frames')
 
     dy = np.diff(threasholds)/dx
@@ -156,11 +156,11 @@ def videoSegment(filename):
     plt.figure(4)
     plt.subplot(211)
     plt.plot(dsub)
-    plt.ylabel('gray difference')
+    plt.ylabel('Otsu differences derivative')
     plt.xlabel('frames')
     plt.subplot(212)
     plt.plot(dy)
-    plt.ylabel('gray values')
+    plt.ylabel('Otsu values derivative')
     plt.xlabel('frames')
     plt.show()
 
